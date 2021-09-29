@@ -11,11 +11,14 @@ public class GameplayController : MonoBehaviour
     [SerializeField] private MovementController _movementController;
     [SerializeField] private FigureCreator _figureCreator;
     [SerializeField] private CameraController _cameraController;
+    [SerializeField] private TowerBuilder _towerBuilder;
+    [SerializeField] private ArrowDrawer _arrowDrawer;
 
-    private Queue<Rigidbody> _droppedFigureRigidBody = new Queue<Rigidbody>(10);
     private readonly ObjectDropper _objectDropper = new ObjectDropper();
     private GameObject _previousFigure;
     private GameObject _currentFigure;
+    private bool _touchBlocked = false;
+    private bool _currentFigureMoving = false;
 
     private void Awake()
     {
@@ -30,9 +33,14 @@ public class GameplayController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 && !_touchBlocked)
         {
             DropFigure();
+        }
+
+        if (_currentFigureMoving)
+        {
+            _arrowDrawer.DrawArrow(_currentFigure.transform);
         }
     }
 
@@ -41,19 +49,28 @@ public class GameplayController : MonoBehaviour
         _previousFigure = _currentFigure;
         _cameraController.RaiseCamera(calledFigure.Height);
         SetNewFigure();
+
+        _touchBlocked = false;
     }
 
     private void DropFigure()
     {
+        _touchBlocked = true;
+        _currentFigureMoving = false;
+
         _movementController.StopMoving();
 
-        Rigidbody rigidbody = _currentFigure.GetComponent<Rigidbody>();
-        _objectDropper.DropPhysicObject(rigidbody);
+        Figure figureScript = _currentFigure.GetComponent<Figure>();
+        _objectDropper.DropPhysicObject(figureScript.Rigidbody);
+        _towerBuilder.AddFigure(figureScript);
+        _arrowDrawer.DisableArrow();
     }
 
     private void SetNewFigure()
     {
         _currentFigure = _figureCreator.SpawnFigure();
         _movementController.MoveThisObject(_currentFigure.transform);
+        _currentFigureMoving = true;
+        _arrowDrawer.ActiveArrow();
     }
 }

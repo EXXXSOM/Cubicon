@@ -127,3 +127,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Height: 1
+  _rigidBody: {fileID: 1502950195763286431}
