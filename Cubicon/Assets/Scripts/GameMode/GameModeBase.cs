@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class GameModeBase : MonoBehaviour
+public abstract class GameModeBase : ScriptableObject
 {
+    [SerializeField] protected PoolInfo[] _poolInfo;
+
     public abstract void Setup();
+    public abstract void Restart();
     public abstract void Dispose();
 }

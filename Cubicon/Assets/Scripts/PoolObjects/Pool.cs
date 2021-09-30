@@ -25,6 +25,14 @@ public class Pool
         }
     }
 
+    public void Dispose()
+    {
+        for (int i = 0; i < _availableObjects.Count; i++)
+        {
+            GameObject.Destroy(_availableObjects.Pop().gameObject);
+        }
+    }
+
     //o(1)
     private void AddObjectToPool(PoolObject poolObject)
     {

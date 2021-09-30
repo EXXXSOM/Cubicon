@@ -14,7 +14,7 @@ public class PoolManager : MonoBehaviour, IPoolService
 {
     public static PoolManager Instance;
     [Header("Editing Pool Info value at runtime has no effect")]
-    [SerializeField] private PoolInfo[] poolInfo;
+    [SerializeField] private PoolInfo[] _poolInfo;
 
     //mapping of pool name vs list
     private Dictionary<string, Pool> poolDictionary = new Dictionary<string, Pool>();
@@ -26,18 +26,36 @@ public class PoolManager : MonoBehaviour, IPoolService
         CreatePools();
     }
 
+    public void SetupAndCreatePools(PoolInfo[] poolInfo)
+    {
+        _poolInfo = poolInfo;
+        CheckForDuplicatePoolNames();
+        CreatePools();
+    }
+
+    public void ClearPools()
+    {
+        foreach (var pool in poolDictionary.Values)
+        {
+            pool.Dispose();
+        }
+
+        poolDictionary.Clear();
+        _poolInfo = null;
+    }
+
     private void CheckForDuplicatePoolNames()
     {
-        for (int index = 0; index < poolInfo.Length; index++)
+        for (int index = 0; index < _poolInfo.Length; index++)
         {
-            string poolName = poolInfo[index].poolName;
+            string poolName = _poolInfo[index].poolName;
             if (poolName.Length == 0)
             {
                 Debug.LogError(string.Format("Pool {0} does not have a name!", index));
             }
-            for (int internalIndex = index + 1; internalIndex < poolInfo.Length; internalIndex++)
+            for (int internalIndex = index + 1; internalIndex < _poolInfo.Length; internalIndex++)
             {
-                if (poolName.Equals(poolInfo[internalIndex].poolName))
+                if (poolName.Equals(_poolInfo[internalIndex].poolName))
                 {
                     Debug.LogError(string.Format("Pool {0} & {1} have the same name. Assign different names.", index, internalIndex));
                 }
@@ -47,14 +65,12 @@ public class PoolManager : MonoBehaviour, IPoolService
 
     private void CreatePools()
     {
-        foreach (PoolInfo currentPoolInfo in poolInfo)
+        foreach (PoolInfo currentPoolInfo in _poolInfo)
         {
 
             Pool pool = new Pool(currentPoolInfo.poolName, currentPoolInfo.prefab,
                                  currentPoolInfo.poolSize, currentPoolInfo.fixedSize, transform);
 
-
-            Debug.Log("Creating pool: " + currentPoolInfo.poolName);
             poolDictionary[currentPoolInfo.poolName] = pool;
         }
     }

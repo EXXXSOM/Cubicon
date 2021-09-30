@@ -11,8 +11,10 @@ public class MovementController : MonoBehaviour
     private Transform _currentTarget;
     private Tween _tween;
     private MovementPathBuilder[] _movementPathBuilders;
-
     private Vector3[] _currentPath = new Vector3[0];
+    private bool _currentFigureMoving = false;
+
+    public bool CurrentFigureMoving => _currentFigureMoving;
 
     private void Awake()
     {
@@ -26,12 +28,13 @@ public class MovementController : MonoBehaviour
         _movementPathBuilders[1] = new MovementPathFullZBuilder();
     }
 
-    public void MoveThisObject(Transform transformObject)
+    public void StartMoveThisObject(Transform transformObject)
     {
         _currentTarget = transformObject;
         _currentPath = _movementPathBuilders[0].BuildPath(transformObject, _rangeMove);
 
         RecalculatePath();
+        _currentFigureMoving = true;
     }
 
     private void RecalculatePath()
@@ -42,12 +45,13 @@ public class MovementController : MonoBehaviour
             .SetEase(Ease.Linear)
             .OnComplete(RecalculatePath);
 
-        Debug.Log("RecalculatePath!");
+        //Debug.Log("RecalculatePath!");
     }
 
     public void StopMoving()
     {
         _tween.Pause();
+        _currentFigureMoving = false;
     }
 
     public void SetSpeed(int minSpeed, int maxSpeed)

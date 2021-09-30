@@ -9,14 +9,28 @@ public class TowerBuilder : MonoBehaviour
 
     public void AddFigure(Figure newFigure)
     {
-        if (_activeFigureInTower.Count + 1 >= NumberOfSimulatingFigures)
+        _activeFigureInTower.Enqueue(newFigure);
+
+        if (_activeFigureInTower.Count >= NumberOfSimulatingFigures)
         {
-            Debug.Log(_activeFigureInTower.Count);
             Figure lastFigure = _activeFigureInTower.Dequeue();
-            FrozeFigure(lastFigure.Rigidbody);
+            FrozeFigure(_activeFigureInTower.Peek().Rigidbody);
+            PoolManager.Instance.ReturnObjectToPool(lastFigure.gameObject);
+        }
+        else if (_activeFigureInTower.Count == NumberOfSimulatingFigures - 1)
+        {
+            FrozeFigure(_activeFigureInTower.Peek().Rigidbody);
+        }
+    }
+
+    public void ResetState()
+    {
+        foreach (var figure in _activeFigureInTower)
+        {
+            PoolManager.Instance.ReturnObjectToPool(figure.gameObject);
         }
 
-        _activeFigureInTower.Enqueue(newFigure);
+        _activeFigureInTower.Clear();
     }
 
     private void FrozeFigure(Rigidbody figureRigidBody)

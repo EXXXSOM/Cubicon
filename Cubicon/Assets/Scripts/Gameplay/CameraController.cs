@@ -22,4 +22,10 @@ public class CameraController : MonoBehaviour
     {
         transform.position = Vector3.Lerp(transform.position, _futurePositionCamera, Speed * Time.deltaTime);
     }
+
+    public void ResetState()
+    {
+        _futurePositionCamera = _startCameraPosition;
+        transform.position = _startCameraPosition;
+    }
 }

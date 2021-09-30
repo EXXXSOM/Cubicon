@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class GameplayController : MonoBehaviour
 {
@@ -17,8 +18,8 @@ public class GameplayController : MonoBehaviour
     private readonly ObjectDropper _objectDropper = new ObjectDropper();
     private GameObject _previousFigure;
     private GameObject _currentFigure;
+    private Figure _currentFigureScript;
     private bool _touchBlocked = false;
-    private bool _currentFigureMoving = false;
 
     private void Awake()
     {
@@ -28,7 +29,7 @@ public class GameplayController : MonoBehaviour
 
     private void Start()
     {
-        SetNewFigure();
+        SetNewCurrentFigure();
     }
 
     private void Update()
@@ -38,7 +39,7 @@ public class GameplayController : MonoBehaviour
             DropFigure();
         }
 
-        if (_currentFigureMoving)
+        if (_movementController.CurrentFigureMoving)
         {
             _arrowDrawer.DrawArrow(_currentFigure.transform);
         }
@@ -48,29 +49,44 @@ public class GameplayController : MonoBehaviour
     {
         _previousFigure = _currentFigure;
         _cameraController.RaiseCamera(calledFigure.Height);
-        SetNewFigure();
-
+        _figureCreator.RaiseSpawnPoint(calledFigure.Height);
+        SetNewCurrentFigure();
         _touchBlocked = false;
+
+        ScoreCounter.AddScore(calledFigure.Score);
     }
 
     private void DropFigure()
     {
         _touchBlocked = true;
-        _currentFigureMoving = false;
-
         _movementController.StopMoving();
+        _objectDropper.DropPhysicObject(_currentFigureScript.Rigidbody);
+        _towerBuilder.AddFigure(_currentFigureScript);
 
-        Figure figureScript = _currentFigure.GetComponent<Figure>();
-        _objectDropper.DropPhysicObject(figureScript.Rigidbody);
-        _towerBuilder.AddFigure(figureScript);
+        //Ёффекты
         _arrowDrawer.DisableArrow();
     }
 
-    private void SetNewFigure()
+    private void SetNewCurrentFigure()
     {
-        _currentFigure = _figureCreator.SpawnFigure();
-        _movementController.MoveThisObject(_currentFigure.transform);
-        _currentFigureMoving = true;
+        _currentFigureScript = _figureCreator.SpawnFigure(new ChangingScaleSpawnEffect(), ActivateFigure);
+        _currentFigure = _currentFigureScript.gameObject;
+        _currentFigureScript.Prepare();
+
+        _movementController.StartMoveThisObject(_currentFigure.transform); //в SetNewFigure
+    }
+
+    private void ActivateFigure()
+    {
+        //_movementController.StartMoveThisObject(_currentFigure.transform); //в SetNewFigure
+
+        //Ёффекты
         _arrowDrawer.ActiveArrow();
+    }
+
+    public void Restart()
+    {
+        _towerBuilder.ResetState();
+        _cameraController.ResetState();
     }
 }

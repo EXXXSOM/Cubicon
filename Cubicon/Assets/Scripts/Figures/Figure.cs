@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Figure : MonoBehaviour
 {
+    public int Score = 1;
     public float Height = 1f;
     private bool _isHit = false;
 
@@ -15,5 +16,10 @@ public class Figure : MonoBehaviour
             _isHit = true;
             GameplayController.Instance.FigureHitPreviousFigure(this);
         }
+    }
+
+    public void Prepare()
+    {
+        _isHit = false;
     }
 }
