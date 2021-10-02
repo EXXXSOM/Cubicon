@@ -1,20 +1,28 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
 public class FigureCreator : MonoBehaviour
 {
     [SerializeField] private Transform _spawnPoint;
-    
-    public Figure SpawnFigure(DefaultSpawnEffect defaultSpawnEffect, Action callbackSpawn)
+    private readonly DefaultSpawnEffect _defaultSpawnEffect = new DefaultSpawnEffect();
+    private const float SPAWN_EFFECT_DURATION = 0.2f;
+    private FigureSelector _figureSelector;
+
+    private void Awake()
     {
-        GameObject figure = PoolManager.Instance.GetObjectFromPool(Figures.DefaultCube.ToString(), _spawnPoint.position, _spawnPoint.rotation);
-        if (defaultSpawnEffect != null)
+        _figureSelector = GameModeStarter.CurrentMode.FigureSelector;
+    }
+
+    public Figure SpawnFigure(DefaultSpawnEffect spawnEffect, Action callbackSpawn)
+    {
+        GameObject figure = PoolManager.Instance.GetObjectFromPool(_figureSelector.GetFigureType().ToString(), _spawnPoint.position, _spawnPoint.rotation);
+        if (spawnEffect != null)
         {
-            defaultSpawnEffect.PlaySpawnEffect(figure, callbackSpawn, 0.2f);
+            spawnEffect.PlaySpawnEffect(figure, callbackSpawn, SPAWN_EFFECT_DURATION);
         }
         else
         {
-            callbackSpawn.Invoke();
+            _defaultSpawnEffect.PlaySpawnEffect(figure, callbackSpawn, SPAWN_EFFECT_DURATION);
         }
 
         return figure.GetComponent<Figure>();

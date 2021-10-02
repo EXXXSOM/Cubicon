@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [System.Serializable]
 public class PoolInfo
@@ -22,8 +23,6 @@ public class PoolManager : MonoBehaviour, IPoolService
     private void Awake()
     {
         Instance = this;
-        CheckForDuplicatePoolNames();
-        CreatePools();
     }
 
     public void SetupAndCreatePools(PoolInfo[] poolInfo)

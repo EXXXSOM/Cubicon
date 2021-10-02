@@ -6,7 +6,7 @@ public class Figure : MonoBehaviour
     public float Height = 1f;
     private bool _isHit = false;
 
-    [SerializeField] private Rigidbody _rigidBody;
+    [SerializeField] protected Rigidbody _rigidBody;
     public Rigidbody Rigidbody => _rigidBody;
 
     private void OnCollisionEnter(Collision collision)
@@ -16,9 +16,13 @@ public class Figure : MonoBehaviour
             _isHit = true;
             GameplayController.Instance.FigureHitPreviousFigure(this);
         }
+
+        OnHit();
     }
 
-    public void Prepare()
+    public virtual void OnHit(){}
+
+    public virtual void Prepare()
     {
         _isHit = false;
     }

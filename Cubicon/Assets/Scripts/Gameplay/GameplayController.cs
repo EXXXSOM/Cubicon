@@ -72,13 +72,11 @@ public class GameplayController : MonoBehaviour
         _currentFigureScript = _figureCreator.SpawnFigure(new ChangingScaleSpawnEffect(), ActivateFigure);
         _currentFigure = _currentFigureScript.gameObject;
         _currentFigureScript.Prepare();
-
-        _movementController.StartMoveThisObject(_currentFigure.transform); //в SetNewFigure
     }
 
     private void ActivateFigure()
     {
-        //_movementController.StartMoveThisObject(_currentFigure.transform); //в SetNewFigure
+        _movementController.StartMoveThisObject(_currentFigure.transform); //в SetNewFigure
 
         //Ёффекты
         _arrowDrawer.ActiveArrow();

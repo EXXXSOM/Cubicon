@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public static class GameModeStarter
 {
-    private static GameModeBase _currentMode = null;
+    private static SettingsModeBase _currentMode = null;
+    public static SettingsModeBase CurrentMode => _currentMode;
 
-    public static void StartGame(GameModeBase mode)
+    public static void StartGame(SettingsModeBase mode)
     {
         if (_currentMode != null)
             mode.Dispose();
@@ -20,6 +17,14 @@ public static class GameModeStarter
             _currentMode = mode;
             mode.Setup();
         }
+    }
+
+    public static void SetupGameModeSettings(SettingsModeBase mode)
+    {
+        if (mode == null) return;
+
+        _currentMode = mode;
+        _currentMode.Setup();
     }
 
     public static void RestartMode()

@@ -1,4 +1,4 @@
-public enum Figures
+public enum FigureType
 {
     DefaultCube,
     FrozenCube,

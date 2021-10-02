@@ -8,7 +8,7 @@ public class Menu : MonoBehaviour
     public Canvas StartMenuCanvas;
     public Canvas GameplayCanvas;
 
-    public GameModeBase CurrentMode;
+    public SettingsModeBase CurrentMode;
 
     private Canvas _currentMenuCanvas;
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public abstract class DefaultSpawnEffect
+public class DefaultSpawnEffect
 {
-    public abstract void PlaySpawnEffect(GameObject spawnedObject, Action callbackSpawn, float durationEffect = 1);
+    public virtual void PlaySpawnEffect(GameObject spawnedObject, Action callbackSpawn, float durationEffect = 1){}
 }
