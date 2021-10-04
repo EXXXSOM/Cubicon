@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class LoseWall : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Lose");
+        GameplayController.Instance.LoseGame();
     }
 }

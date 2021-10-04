@@ -1,23 +1,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerBuilder : MonoBehaviour
+public class TowerBuilder
 {
-    public int NumberOfSimulatingFigures = 5;
+    private int _numberOfSimulatingFigures = 5;
 
     private Queue<Figure> _activeFigureInTower = new Queue<Figure>(10);
+
+    public TowerBuilder(int numberOfSimulatingFigures)
+    {
+        _numberOfSimulatingFigures = numberOfSimulatingFigures;
+    }
+
 
     public void AddFigure(Figure newFigure)
     {
         _activeFigureInTower.Enqueue(newFigure);
 
-        if (_activeFigureInTower.Count >= NumberOfSimulatingFigures)
+        if (_activeFigureInTower.Count >= _numberOfSimulatingFigures)
         {
             Figure lastFigure = _activeFigureInTower.Dequeue();
             FrozeFigure(_activeFigureInTower.Peek().Rigidbody);
             PoolManager.Instance.ReturnObjectToPool(lastFigure.gameObject);
         }
-        else if (_activeFigureInTower.Count == NumberOfSimulatingFigures - 1)
+        else if (_activeFigureInTower.Count == _numberOfSimulatingFigures - 1)
         {
             FrozeFigure(_activeFigureInTower.Peek().Rigidbody);
         }

@@ -8,22 +8,33 @@ public class Menu : MonoBehaviour
     public Canvas StartMenuCanvas;
     public Canvas GameplayCanvas;
 
-    public SettingsModeBase CurrentMode;
-
     private Canvas _currentMenuCanvas;
+
+    private GameplayController _gameplayController;
 
     private void Awake()
     {
         _currentMenuCanvas = StartMenuCanvas;
+        _gameplayController = GameplayController.Instance;
+        _gameplayController.OnLoseGame += LoseGame;
     }
 
     public void StartGame()
     {
-        //GameModeStarter.StartGame(CurrentMode);
         _currentMenuCanvas.enabled = false;
-
         _currentMenuCanvas = GameplayCanvas;
         GameplayCanvas.enabled = true;
+
+        GameModeSetuper.PlayMode();
+    }
+
+    public void RestartGame()
+    {
+        _currentMenuCanvas.enabled = false;
+        _currentMenuCanvas = GameplayCanvas;
+        GameplayCanvas.enabled = true;
+
+        GameModeSetuper.RestartMode();
     }
 
     public void LoseGame()

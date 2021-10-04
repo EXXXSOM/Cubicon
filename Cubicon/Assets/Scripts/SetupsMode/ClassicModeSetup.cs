@@ -3,9 +3,10 @@ using UnityEngine;
 public class ClassicModeSetup : SetupConfig
 {
     [SerializeField] private SettingsModeBase _classicModeSettings;
+    [SerializeField] private GameplayController _gameplayController;
 
     public override void OnAwake()
     {
-        GameModeStarter.SetupGameModeSettings(_classicModeSettings);
+        GameModeSetuper.SetupGameModeSettings(_classicModeSettings, _gameplayController);
     }
 }

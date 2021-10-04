@@ -15,7 +15,7 @@ public class PoolManager : MonoBehaviour, IPoolService
 {
     public static PoolManager Instance;
     [Header("Editing Pool Info value at runtime has no effect")]
-    [SerializeField] private PoolInfo[] _poolInfo;
+    [SerializeField] private List<PoolInfo> _poolInfo;
 
     //mapping of pool name vs list
     private Dictionary<string, Pool> poolDictionary = new Dictionary<string, Pool>();
@@ -25,9 +25,10 @@ public class PoolManager : MonoBehaviour, IPoolService
         Instance = this;
     }
 
-    public void SetupAndCreatePools(PoolInfo[] poolInfo)
+    public void SetupAndCreatePools(IEnumerable<PoolInfo> poolInfo)
     {
-        _poolInfo = poolInfo;
+        _poolInfo = new List<PoolInfo>(poolInfo);
+        //_poolInfo = poolInfo;
         CheckForDuplicatePoolNames();
         CreatePools();
     }
@@ -45,14 +46,14 @@ public class PoolManager : MonoBehaviour, IPoolService
 
     private void CheckForDuplicatePoolNames()
     {
-        for (int index = 0; index < _poolInfo.Length; index++)
+        for (int index = 0; index < _poolInfo.Count; index++)
         {
             string poolName = _poolInfo[index].poolName;
             if (poolName.Length == 0)
             {
                 Debug.LogError(string.Format("Pool {0} does not have a name!", index));
             }
-            for (int internalIndex = index + 1; internalIndex < _poolInfo.Length; internalIndex++)
+            for (int internalIndex = index + 1; internalIndex < _poolInfo.Count; internalIndex++)
             {
                 if (poolName.Equals(_poolInfo[internalIndex].poolName))
                 {

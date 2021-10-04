@@ -6,6 +6,6 @@ public class PoolSetuper : MonoBehaviour
 
     private void Awake()
     {
-        PoolManager.SetupAndCreatePools(GameModeStarter.CurrentMode.GetPoolInfo);
+        PoolManager.SetupAndCreatePools(GameModeSetuper.CurrentMode.GetPoolInfo);
     }
 }

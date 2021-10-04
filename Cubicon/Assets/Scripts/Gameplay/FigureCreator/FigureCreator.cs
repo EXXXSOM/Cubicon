@@ -10,7 +10,7 @@ public class FigureCreator : MonoBehaviour
 
     private void Awake()
     {
-        _figureSelector = GameModeStarter.CurrentMode.FigureSelector;
+        _figureSelector = GameModeSetuper.CurrentMode.FigureSelector;
     }
 
     public Figure SpawnFigure(DefaultSpawnEffect spawnEffect, Action callbackSpawn)

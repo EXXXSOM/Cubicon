@@ -22,10 +22,11 @@ public class MovementController : MonoBehaviour
         {
             _maxSpeed = _minSpeed + 0.1f;
         }
+    }
 
-        _movementPathBuilders = new MovementPathBuilder[2];
-        _movementPathBuilders[0] = new MovementPathFullXBuilder();
-        _movementPathBuilders[1] = new MovementPathFullZBuilder();
+    public void SetupMovementPathBuilders(MovementPathBuilder[] movementPathBuilders)
+    {
+        _movementPathBuilders = movementPathBuilders;
     }
 
     public void StartMoveThisObject(Transform transformObject)
@@ -50,13 +51,27 @@ public class MovementController : MonoBehaviour
 
     public void StopMoving()
     {
-        _tween.Pause();
+        _tween.Kill();
         _currentFigureMoving = false;
+    }
+
+    public void PlayMoving()
+    {
+        _tween.Play();
+        _currentFigureMoving = true;
     }
 
     public void SetSpeed(int minSpeed, int maxSpeed)
     {
         _minSpeed = minSpeed;
         _maxSpeed = maxSpeed;
+    }
+
+    public void Clear()
+    {
+        _currentFigureMoving = false;
+        _currentPath = null;
+        _currentTarget = null;
+        _tween.Kill();
     }
 }
